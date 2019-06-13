@@ -1,16 +1,21 @@
+#!/usr/bin/python3
 from sickle import Sickle
 from pymarc import Record, Field, MARCWriter
 import os
 import re
 
-# set save file
-save_file = 'c:\\users\\user\\desktop\\records.dat'
+# configurations
+save_file = 'c:\\users\\user\\desktop\\books.dat'
 
-# load OAI client
+# delete old file (if exists)
+os.system(f'del {save_file}')
+
+# load OAI-PMH client
+# documentation: https://sickle.readthedocs.io/en/latest/
 sickle = Sickle('http://content.cdlib.org/oai')
-records = sickle.ListRecords(metadataPrefix='oai_dc', set='css:ead')
+records = sickle.ListRecords(metadataPrefix='oai_dc', set='YOUR_SET_ID_HERE')
 
-# iterate over OAI set and convert DC to MARC21
+# parse harvested records and generate MARC21
 for record in records:
     # parse dc record
     dc  = record.metadata
@@ -150,8 +155,11 @@ for record in records:
                         '3', 'Finding aid',
                         'u', f'{identifier}',
                     ]))
+    
+    # write to MARC output file
     writer = MARCWriter(open(save_file,'ab'))
     writer.write(marc_record)
     writer.close()
-    
+
+# open up MARC record in default viewer (NOTEPAD most likely)    
 os.system(save_file)
