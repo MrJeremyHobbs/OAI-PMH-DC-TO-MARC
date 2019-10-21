@@ -6,4 +6,4 @@ pymarc==3.1.13
 requests==2.21.0
 Sickle==0.6.4
 six==1.12.0
-urllib3==1.24.1
+urllib3==1.24.2
